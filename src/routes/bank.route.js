@@ -1,18 +1,10 @@
 import { Router } from 'express';
-import BankService from '../services/bank.service';
+import BankController from '../controllers/bank.controller.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
+import { validBalance } from '../middlewares/bank.middleware.js';
 
 const BankRouter = Router();
 
-BankRouter.get('/', async (req, res) => {
-    try {
-        const BankAccounts = await BankService.findAllService();
+BankRouter.post('/deposit', validBalance, authMiddleware, BankController.updateBalance);
 
-        if (BankAccounts.length === 0) {
-            res.status(404).json({ message: 'Não existem contas registrada!' });
-        }
-
-        res.status(201).send(BankAccounts);
-    } catch (err) {
-        res.sendStatus(400);
-    }
-});
+export default BankRouter;

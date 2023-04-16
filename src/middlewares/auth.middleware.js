@@ -48,18 +48,18 @@ export const authMiddleware = (req, res, next) => {
 
         jwt.verify(token, process.env.SECRET_JWT, async (error, decode) => {
             if (error) {
-                res.status(401).json({ message: 'Token inválido!' });
+                return res.status(401).json({ message: 'Token inválido!' });
             }
 
             const user = await UserService.readOneUser(decode.id);
 
             if (!user || !user.id) {
-                res.status(401).json({ message: 'Token inválido!' });
+                return res.status(401).json({ message: 'Token inválido!' });
             }
+            req.id = user.id;
+            return next();
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-
-    return next();
 };

@@ -1,5 +1,6 @@
 import AuthService from '../services/auth.service.js';
 import bcrypt from 'bcrypt';
+import BankService from '../services/bank.service.js';
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -18,7 +19,8 @@ const login = async (req, res) => {
         }
 
         const token = AuthService.generateToken(user.id);
-        res.status(201).json({ token, fullname: user.fullname });
+        const bankAccount = await BankService.findService({ userId: user.id });
+        res.status(201).json({ token, fullname: user.fullname, balance: bankAccount.balance });
     } catch (error) {
         res.status(400).json({
             message: 'A error ocurred',
@@ -27,6 +29,33 @@ const login = async (req, res) => {
     }
 };
 
+const register = async (req, res) => {
+    const { email, password, fullname } = req.body;
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    try {
+        const user = await AuthService.registerService({ email, password: hashedPassword, fullname });
+        const token = AuthService.generateToken(user.id);
+        const newAccount = BankService.createService({ userId: user.id, balance: 0 });
+
+        if (!newAccount) {
+            return res.status(400).json({ message: 'Algo de errado aconteceu ao criar uma nova conta' });
+        }
+
+        res.status(200).json({
+            id: user.id,
+            email,
+            fullname,
+            balance: 0,
+            token
+        });
+    } catch (e) {
+        res.status(409).json({ message: 'Usuário já cadastrado!', error: e.message });
+    }
+};
+
 export default {
-    login
+    login,
+    register
 };
