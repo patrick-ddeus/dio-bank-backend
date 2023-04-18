@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 
 const TransactionSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        unique: true,
-        ref: 'User'
-    },
     type: {
         type: String,
         enum: ['deposit', 'withdraw'],
@@ -22,6 +16,4 @@ const TransactionSchema = new mongoose.Schema({
     }
 });
 
-const Transactions = mongoose.model('BankAccount', TransactionSchema);
-
-export default Transactions;
+export default TransactionSchema;

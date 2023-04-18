@@ -5,6 +5,8 @@ import { validBalance } from '../middlewares/bank.middleware.js';
 
 const BankRouter = Router();
 
-BankRouter.post('/deposit', validBalance, authMiddleware, BankController.updateBalance);
+BankRouter.post('/deposit', validBalance, authMiddleware, BankController.deposit);
+BankRouter.post('/withdraw', validBalance, authMiddleware, BankController.withdraw);
+BankRouter.get('/balance', authMiddleware, BankController.getBalance);
 
 export default BankRouter;

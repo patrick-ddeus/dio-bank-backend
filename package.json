@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "node-fetch": "^2.6.9",
-    "string-strip-html": "^13.2.2"
+    "string-strip-html": "^13.2.2",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
