@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const TransactionSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['deposit', 'withdraw'],
+        enum: ['deposit', 'withdraw', 'transference'],
         required: true
     },
     amount: {

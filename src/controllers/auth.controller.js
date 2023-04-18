@@ -43,7 +43,8 @@ const register = async (req, res) => {
     try {
         const user = await AuthService.registerService({ email, password: hashedPassword, fullname });
         const token = AuthService.generateToken(user.id);
-        const newAccount = BankService.createService({ accountNumber: uuid(), userId: user.id, balance: 0 });
+        const accountNumber = uuid();
+        const newAccount = BankService.createService({ accountNumber, userId: user.id, balance: 0 });
 
         if (!newAccount) {
             return res.status(400).json({ message: 'Algo de errado aconteceu ao criar uma nova conta' });
@@ -51,6 +52,7 @@ const register = async (req, res) => {
 
         res.status(200).json({
             fullname,
+            accountNumber,
             balance: 0,
             token
         });
